@@ -224,7 +224,9 @@ func applyConfig(ctx context.Context, o Options, c EditableConfig) error {
 	if err != nil {
 		return fmt.Errorf("encode config: %w", err)
 	}
-	newPath := o.ConfigPath + ".new"
+	// Keep the extension: `runner validate` picks the config type from it (viper).
+	ext := filepath.Ext(o.ConfigPath)
+	newPath := strings.TrimSuffix(o.ConfigPath, ext) + ".new" + ext
 	if err := writeAtomic(newPath, out, 0o600); err != nil {
 		return err
 	}

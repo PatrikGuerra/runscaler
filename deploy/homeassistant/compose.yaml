@@ -2,7 +2,7 @@
 # Copy to /opt/runscaler/compose.yaml on the host.
 services:
   runscaler:
-    image: ghcr.io/patrikguerra/runscaler:v0.23.0-ha.1
+    image: ghcr.io/patrikguerra/runscaler:v0.23.0-ha.2
     container_name: runscaler
     restart: unless-stopped
     stop_grace_period: 31m          # drain-timeout (max 30m) + 1 min; otherwise jobs are cut after 10 s
