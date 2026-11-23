@@ -188,10 +188,14 @@ var startManager = func(cmd *cobra.Command) error {
 
 	signalCtx, stopSignals := context.WithCancel(cmd.Context())
 	defer stopSignals()
-	go handleShutdownSignals(signalCtx, sigCh, func() { close(drain) }, cancelRun, func() {
+	// Once: the panel inbox and a signal may both ask for a drain.
+	var drainOnce sync.Once
+	requestDrain := func() { drainOnce.Do(func() { close(drain) }) }
+	go handleShutdownSignals(signalCtx, sigCh, requestDrain, cancelRun, func() {
 		fmt.Fprintln(os.Stderr, "\nForce exit")
 		os.Exit(1)
 	})
+	startInbox = inboxStarter(runCtx, requestDrain, cancelRun)
 
 	return runManager(runCtx, cfg, drain)
 }
@@ -304,6 +308,9 @@ func runManager(ctx context.Context, cfg config.Config, drain <-chan struct{}) e
 	}
 	console := logConsole(stdoutIsDevNull(), logFile != nil)
 	logger := config.NewLoggerWithWriter(cfg.LogLevel, cfg.LogFormat, console, logWriter(logFile))
+	if startInbox != nil {
+		startInbox(logger)
+	}
 	var diagnosticStore *diagnostics.Store
 	if cfg.Diagnostics.IsEnabled() {
 		if dir, err := diagnosticDirectory(id, openedLog); err == nil {
