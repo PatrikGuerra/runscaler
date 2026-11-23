@@ -10,6 +10,7 @@ import (
 	"encoding/json"
 	"encoding/pem"
 	"errors"
+	"fmt"
 	"io"
 	"log/slog"
 	"os"
@@ -85,6 +86,10 @@ func newHarness(t *testing.T) *harness {
 		StopNow:    func() { h.stops++ },
 		Logger:     slog.New(slog.NewTextHandler(io.Discard, nil)),
 		Validate: func(_ context.Context, path string) error {
+			// Like viper in `runner validate`: the type comes from the extension.
+			if filepath.Ext(path) != ".toml" {
+				return fmt.Errorf("Unsupported Config Type %q", strings.TrimPrefix(filepath.Ext(path), "."))
+			}
 			body, _ := os.ReadFile(path)
 			h.validatedConfigs = append(h.validatedConfigs, string(body))
 			return h.validateErr
@@ -245,8 +250,8 @@ func TestFailedValidationKeepsConfig(t *testing.T) {
 	if string(before) != string(after) {
 		t.Fatal("config changed after failed validation")
 	}
-	if _, err := os.Stat(h.opts.ConfigPath + ".new"); !errors.Is(err, os.ErrNotExist) {
-		t.Fatal("config.toml.new left behind")
+	if _, err := os.Stat(filepath.Join(filepath.Dir(h.opts.ConfigPath), "config.new.toml")); !errors.Is(err, os.ErrNotExist) {
+		t.Fatal("config.new.toml left behind")
 	}
 	if h.drains != 0 {
 		t.Fatal("drain called on a rejected request")
