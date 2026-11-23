@@ -60,7 +60,7 @@ func run(listen, dataDir, exchangeDir, healthURL string, pollInterval, retention
 	if err != nil {
 		return err
 	}
-	defer store.Close()
+	defer func() { _ = store.Close() }()
 
 	auth, setupToken, err := panel.NewAuth(ctx, store)
 	if err != nil {

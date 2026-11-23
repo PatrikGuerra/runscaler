@@ -123,7 +123,7 @@ func (s *Store) ListEvents(ctx context.Context, kind string, before int64, limit
 	if err != nil {
 		return nil, err
 	}
-	defer rows.Close()
+	defer func() { _ = rows.Close() }()
 	events := []Event{}
 	for rows.Next() {
 		var e Event

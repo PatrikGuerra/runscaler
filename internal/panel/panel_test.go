@@ -53,7 +53,7 @@ func TestStoreEventsAndReopen(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer s.Close()
+	defer func() { _ = s.Close() }()
 	all, _ := s.ListEvents(ctx, "", 0, 10)
 	if len(all) != 3 || all[0].ID <= all[1].ID {
 		t.Fatalf("events = %+v", all)
