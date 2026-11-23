@@ -1,0 +1,18 @@
+{
+  "id": "0b6f5c3e-6a3b-4d0e-9f1a-2c7d8e9f0a1b",
+  "kind": "config",
+  "createdAt": "2026-11-23T15:00:00Z",
+  "config": {
+    "url": "https://github.com/PatrikGuerra/DinoDinoScraper",
+    "name": "orangepi3",
+    "maxRunners": 1,
+    "concurrent": 1,
+    "minRunners": 0,
+    "dockerMemoryMb": 1024,
+    "dockerCpu": 2,
+    "dockerPidsLimit": 256,
+    "runnerImage": "ghcr.io/actions/actions-runner:2.338.2",
+    "drainTimeout": "30m",
+    "logLevel": "info"
+  }
+}

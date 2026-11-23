@@ -1,0 +1,29 @@
+# runscaler for the Home Assistant setup (see README.md in this folder).
+# Copy to /opt/runscaler/compose.yaml on the host.
+services:
+  runscaler:
+    image: ghcr.io/patrikguerra/runscaler:v0.23.0-ha.1
+    container_name: runscaler
+    restart: unless-stopped
+    stop_grace_period: 31m          # drain-timeout (max 30m) + 1 min; otherwise jobs are cut after 10 s
+    user: "0:0"                     # owns docker.sock and the exchange files; no capabilities
+    read_only: true
+    tmpfs: [/tmp]                   # run lock at /tmp/runner.lock
+    working_dir: /var/lib/runner
+    environment:
+      HOME: /var/lib/runner
+      RUNNER_EXCHANGE_DIR: /exchange
+    command: ["--config", "/data/config.toml"]
+    security_opt: [no-new-privileges:true]
+    cap_drop: [ALL]
+    mem_limit: 128m
+    ports:
+      - "127.0.0.1:8089:8089"       # /healthz for Home Assistant (host network); never on the LAN
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./data:/data
+      - ./data/state:/var/lib/runner
+      - ./exchange:/exchange
+    logging:
+      driver: json-file
+      options: { max-size: "10m", max-file: "3" }

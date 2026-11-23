@@ -1,5 +1,7 @@
 # Runscaler
 
+> **Modified fork.** This is [PatrikGuerra/runscaler](https://github.com/PatrikGuerra/runscaler), a modified copy of [ysya/runscaler](https://github.com/ysya/runscaler). It adds `internal/inbox`, which applies change requests from a shared directory, and a Home Assistant setup in [`deploy/homeassistant`](deploy/homeassistant). It is distributed under the same [Sustainable Use License](LICENSE), free of charge and for non-commercial use.
+
 [![Release](https://img.shields.io/github/v/release/ysya/runscaler)](https://github.com/ysya/runscaler/releases)
 [![Go Version](https://img.shields.io/github/go-mod/go-version/ysya/runscaler)](https://go.dev)
 [![License](https://img.shields.io/badge/license-SUL%201.0-blue)](LICENSE)
