@@ -24,6 +24,7 @@ services:
       - ./data:/data
       - ./data/state:/var/lib/runner
       - ./exchange:/exchange
+      - ./exchange/logs:/var/log/runner   # root logs must live under /var/log
     logging:
       driver: json-file
       options: { max-size: "10m", max-file: "3" }

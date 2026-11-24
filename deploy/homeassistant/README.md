@@ -28,7 +28,7 @@ O `internal/inbox` aceita só uma lista fechada de campos. Um pedido não conseg
 2. Em `/opt/runscaler/data/config.toml`, acrescente:
 
    ```toml
-   log-file = "/exchange/logs/runner.log"
+   log-file = "/var/log/runner/runner.log"   # root only logs under /var/log; compose maps it to exchange/logs
    health-address = "0.0.0.0"   # inside the container; compose publishes it only on 127.0.0.1
    health-port = 8089
    ```
